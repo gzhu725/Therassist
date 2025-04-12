@@ -13,10 +13,12 @@
     "@google/genai": "^0.8.0",
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/forms": "^0.5.10",
+    "axios": "^1.8.4",
     "next": "15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-webcam": "^7.2.0",
+    "resend": "^4.2.0",
     "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
