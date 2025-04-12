@@ -31,6 +31,7 @@ const RandomPage = () => {
   };
 
   const triggerFileInput = () => {
+    setShowWebcam(false);
     setImage(null);
     fileInputRef.current.click();
   };
