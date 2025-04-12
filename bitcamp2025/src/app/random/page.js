@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
+import TesseractText from "../textrecognition"; // The OCR component
 
 const RandomPage = () => {
   const [image, setImage] = useState(null);
@@ -79,6 +80,9 @@ const RandomPage = () => {
           </button>
         </div>
       )}
+      <br/>
+      tesseract interaction below
+      <TesseractText imageName={"/IMG_5051.jpg"} />
     </div>
   );
 };
