@@ -2,6 +2,7 @@
 
 import { ShieldCheckIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function NavBar() {
   const router = useRouter(); // Create the router instance to use for navigation
@@ -10,13 +11,14 @@ export default function NavBar() {
     <div className="w-full lg:pt-8">
       <div className="flex justify-between items-center px-6 text-center sm:text-left">
         {/* Left Section: NurseAssist Title */}
-        <h1 className="text-4xl font-bold flex items-center gap-2 text-white">
-          <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 rounded-full flex items-center justify-center">
-            <ShieldCheckIcon className="h-5 w-5 text-white" />
-          </div>
-          NurseAssist
-        </h1>
-
+        <Link href="/">
+          <h1 className="text-4xl font-bold flex items-center gap-2 text-white">
+            <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 rounded-full flex items-center justify-center">
+              <ShieldCheckIcon className="h-5 w-5 text-white" />
+            </div>
+            NurseAssist
+          </h1>
+        </Link>
         {/* Right Section: Button Container */}
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-6">
           <button
