@@ -8,12 +8,31 @@ const Name = () => {
     return (
         <div>
             <NavBar />
-            <div className="text-center">
-                <h2 className="text-3xl font-semibold mb-8 mt-20">
-                    Hello World!
-                </h2>
-            </div>
-            <p>{text}</p>
+            <table>
+                <tr>
+                    <th>
+                        <h2 className="text-3xl font-semibold mb-8 mt-20">
+                            Therapist
+                        </h2> 
+                    </th>
+                </tr>
+                <tr>
+                <td>
+                    one
+                    <label for="cars">Choose a car:</label>
+                    <select name="cars" id="cars">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                    </select>   
+                    three
+                </td>
+                <td>
+                    two
+                </td>
+                </tr>
+            </table>
         </div>
     )
 }
