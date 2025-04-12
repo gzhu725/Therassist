@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
-import TesseractText from "../textrecognition"; // The OCR component
+import NavBar from "../components/NavBar";
 
-const RandomPage = () => {
+
+const UploadInfo = () => {
   const [image, setImage] = useState(null);
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -43,6 +44,7 @@ const RandomPage = () => {
 
   return (
     <div>
+      <NavBar />
       <button onClick={triggerFileInput}>Select a Photo</button>
       <br />
       <br />
@@ -86,4 +88,4 @@ const RandomPage = () => {
   );
 };
 
-export default RandomPage;
+export default UploadInfo;
