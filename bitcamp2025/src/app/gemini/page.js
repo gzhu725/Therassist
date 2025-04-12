@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import { GoogleGenAI } from "@google/genai";
+import { GEMINI_KEY } from "@/keys";
 
 const GeminiPage = () => {
   const [text, setText] = useState("");
@@ -11,7 +12,7 @@ const GeminiPage = () => {
     console.log(inputtext);
 
     const ai = new GoogleGenAI({
-      apiKey: "AIzaSyDIuS7uENtCJALiRnCa-juAdEcO82dqplI",
+      apiKey: GEMINI_KEY,
     });
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",

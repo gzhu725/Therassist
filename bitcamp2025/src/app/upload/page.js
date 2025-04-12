@@ -1,7 +1,9 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Webcam from "react-webcam";
 import NavBar from "../components/NavBar";
+import { GoogleGenAI } from "@google/genai";
+import { GEMINI_KEY } from "@/keys";
 
 const UploadInfo = () => {
   const [image, setImage] = useState(null);
@@ -9,26 +11,104 @@ const UploadInfo = () => {
   const fileInputRef = useRef(null);
   const [showWebcam, setShowWebcam] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [scannedText, setScannedText] = useState("");
+
+  const [geminiText, setGeminiText] = useState("");
+
+  useEffect(() => {
+    if (scannedText) {
+      sendEmail();
+    }
+  }, [scannedText]);
 
   const handleScan = async (imageUrl) => {
     setLoading(true);
     try {
       const blob = await fetch(imageUrl).then((res) => res.blob());
-      const base64 = await blobToBase64(blob);  //valid base 64 coding
+      const base64 = await blobToBase64(blob); //valid base 64 coding
 
       const res = await fetch("/api/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 })
+        body: JSON.stringify({ image: base64 }),
       });
 
       const data = await res.json();
       console.log("Detected text:", data.text);
+      setScannedText(data.text);
     } catch (err) {
       console.error("Scan failed:", err);
     }
     setLoading(false);
   };
+
+  async function sendEmail() {
+
+     /*
+    email: string
+    take the scanned text
+    run thru gemini. what are the plan of action/suggested things for the client to do?
+    send that suggestion to the client
+    */
+   
+    const geminiInput =
+      "Please write an email (no subject) to the following client about the tasks they should complete before our next session based on the following notes:" +
+      scannedText;
+    console.log(geminiInput);
+  
+    const ai = new GoogleGenAI({
+      apiKey: GEMINI_KEY,
+    });
+  
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: geminiInput,
+      });
+  
+      const suggestion = await response.response.text();
+      console.log("Generated suggestion:", suggestion);
+  
+      setGeminiText(suggestion);
+  
+      if (suggestion.trim() !== "") {
+        await fetch("/api/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: suggestion }),
+        });
+      } else {
+        console.warn("Gemini returned an empty suggestion, not sending email.");
+      }
+    } catch (err) {
+      console.error("Error generating Gemini content or sending email:", err);
+    }
+  }
+
+  async function sendEmail() {
+  
+    const geminiInput =
+      "Please write an email (no subject) to the following client about the tasks they should complete before our next session based on the following notes:" +
+      scannedText;
+    console.log(geminiInput);
+    const ai = new GoogleGenAI({
+      apiKey: GEMINI_KEY,
+    });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: geminiInput,
+    });
+    console.log(response.text);
+
+    //after getting the response, send an automatic ACTUAL email from allwoed domain to gloria's personal email for now
+    await fetch("/api/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: response.text })
+    });
+  
+  
+  }
 
   const triggerPhoto = () => {
     setImage(null);
