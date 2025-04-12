@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -98,6 +99,13 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+
+      <Link
+        href="/random"
+        className="rounded-full border border-solid border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px] flex items-center justify-center"
+      >
+        Go to Random Page
+      </Link>
     </div>
   );
 }
