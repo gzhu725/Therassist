@@ -82,7 +82,6 @@ const RandomPage = () => {
       )}
       <br/>
       tesseract interaction below
-      <TesseractText imageName={"/IMG_5051.jpg"} />
     </div>
   );
 };
