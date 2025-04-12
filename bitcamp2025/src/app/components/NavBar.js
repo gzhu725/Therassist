@@ -34,6 +34,13 @@ export default function NavBar() {
           >
             There is a Bot!
           </button>
+
+          <button
+            onClick={() => router.push("/login")}
+            className="min-w-[200px] h-11 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 hover:from-emerald-600 hover:via-lime-600 hover:to-green-600 text-white px-6 py-2.5 rounded-md transition-all duration-300 text-lg text-center"
+          >
+            Login
+          </button>
         </div>
       </div>
     </div>
