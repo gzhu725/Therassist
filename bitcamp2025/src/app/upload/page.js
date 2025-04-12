@@ -16,6 +16,8 @@ const UploadInfo = () => {
       const blob = await fetch(imageUrl).then((res) => res.blob());
       const base64 = await blobToBase64(blob);  //valid base 64 coding
 
+      if (imageInput.startsWith("data:image")) base64 = imageInput.split(",")[1];
+
       const res = await fetch("/api/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
