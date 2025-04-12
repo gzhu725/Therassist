@@ -8,18 +8,51 @@ const UploadInfo = () => {
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
   const [showWebcam, setShowWebcam] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleScan = async (imageUrl) => {
+    setLoading(true);
+    try {
+      const blob = await fetch(imageUrl).then((res) => res.blob());
+      const base64 = await blobToBase64(blob);  //valid base 64 coding
+
+      if (imageInput.startsWith("data:image")) base64 = imageInput.split(",")[1];
+
+      const res = await fetch("/api/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 })
+      });
+
+      const data = await res.json();
+      console.log("Detected text:", data.text);
+    } catch (err) {
+      console.error("Scan failed:", err);
+    }
+    setLoading(false);
+  };
 
   const triggerPhoto = () => {
     setImage(null);
     setShowWebcam((prev) => !prev);
   };
 
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     const screenshot = webcamRef.current.getScreenshot();
     if (screenshot) {
       setImage(screenshot);
       setShowWebcam(false);
+      await handleScan(screenshot);
     }
+  };
+
+  const blobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(",")[1]); // get base64 only
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   };
 
   const handleFileChange = (e) => {
@@ -28,6 +61,8 @@ const UploadInfo = () => {
       const url = URL.createObjectURL(file);
       setImage(url);
       setShowWebcam(false);
+      console.log("will it handle this scan? " + url);
+      handleScan(url);
     }
   };
 
