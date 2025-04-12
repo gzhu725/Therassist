@@ -14,7 +14,7 @@ const UploadInfo = () => {
     setLoading(true);
     try {
       const blob = await fetch(imageUrl).then((res) => res.blob());
-      const base64 = await blobToBase64(blob);  //valid base 64 coding
+      var base64 = await blobToBase64(blob);  //valid base 64 coding
 
       if (imageInput.startsWith("data:image")) base64 = imageInput.split(",")[1];
 
