@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
+@import "flowbite/src/themes/default";
 
 :root {
   --background: #ffffff;
@@ -33,7 +36,6 @@ input[type="text"] {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  border: 1px solid red;
   gap: 10px;
 }
 

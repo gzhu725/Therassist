@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "flowbite-react patch"
   },
   "dependencies": {
     "@google-cloud/vision": "^5.1.0",
@@ -20,6 +21,8 @@
     "express": "^5.1.0",
     "mongodb": "^6.15.0",
     "mongoose": "^8.13.2",
+    "flowbite": "^3.1.2",
+    "flowbite-react": "^0.11.7",
     "next": "15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
