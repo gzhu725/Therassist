@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ClientDashboardPage = () => {
-  const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today?");
+  const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today? Ask me about your treatment plans, goals, and progress.");
   const [client, setClient] = useState("Jojo Siwa");
   const [summary, setSummary] = useState("No Client Selected");
   const [clientsList, setClientsList] = useState(["Bonnie Green"]);
@@ -39,9 +39,15 @@ const ClientDashboardPage = () => {
     setChatAnswer("Loading...");
     var inputtext = document.getElementById("question-input").value;
     console.log(inputtext);
-    var extraInput =
-      "\n Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.";
 
+    const clientContext = `
+    Client Summary: ${summary || "No summary available"}.
+    Recent Sessions: ${sessionsList.length > 0 ? sessionsList.join(", ") : "No sessions available"}.
+    Files: ${clientFilesList.length > 0 ? clientFilesList.join(", ") : "No files available"}.`;
+    
+    var extraInput =
+      `Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.Use the following client data to inform your response: ${clientContext}`;
+    
     const ai = new GoogleGenAI({
       apiKey: GEMINI_KEY,
     });
@@ -104,7 +110,7 @@ const ClientDashboardPage = () => {
   }, []); 
 
   // const fetchData = async () => {
-  //   const res = await fetch("http://localhost:5001/clients/getSummary/Gloria");
+  //   const res = await fetch("http://localhost:5000/clients/getSummary/Gloria");
   //   const summary = await res.text();
   //   console.log("Summary:", summary);
 

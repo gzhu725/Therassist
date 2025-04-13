@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const TherapistDashboardPage = () => {
-  const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today?");
+  const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today? Ask me about clients, sessions, or patient progress.");
   const [client, setClient] = useState("Select a Client:");
   const [summary, setSummary] = useState("No Client Selected");
   const [clientsList, setClientsList] = useState([]);
@@ -21,7 +21,7 @@ const TherapistDashboardPage = () => {
   );
   const [currentFileName, setCurrentFileName] = useState("");
 
-  const [username, setUsername] = useState("candacesun");
+  const [username, setUsername] = useState("Gloria Zhu");
   const router = useRouter(); // Create the router instance to use for navigation
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const TherapistDashboardPage = () => {
   }, []);
 
   async function getClients() {
-    var name = "Dr.Therapist";
+    var name = "Gloria Zhu";
     try {
       // Fetch user data from the backend
       const response = await fetch(`http://localhost:5000/getClients/${name}`, {
@@ -63,8 +63,14 @@ const TherapistDashboardPage = () => {
     setChatAnswer("Loading...");
     var inputtext = document.getElementById("question-input").value;
     console.log(inputtext);
+    
+    const clientContext = `
+    Client Summary: ${summary || "No summary available"}.
+    Recent Sessions: ${sessionsList.length > 0 ? sessionsList.join(", ") : "No sessions available"}.
+    Files: ${clientFilesList.length > 0 ? clientFilesList.join(", ") : "No files available"}.`;
+    
     var extraInput =
-      "\n Answer the user query above as an assistant to a therapist. Keep your answer unformatted and no more than a paragraph.";
+    `Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.Use the following client data to inform your response: ${clientContext}`;
 
     const ai = new GoogleGenAI({
       apiKey: GEMINI_KEY,
@@ -81,7 +87,7 @@ const TherapistDashboardPage = () => {
     try {
       // Fetch user data from the backend
       const response = await fetch(
-        `http://localhost:5000/clients/get/${clientItem}`,
+        `http://localhost:5000/clients/getAllData/${clientItem}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
