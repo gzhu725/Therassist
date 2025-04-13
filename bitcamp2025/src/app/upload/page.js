@@ -9,15 +9,9 @@ const UploadInfo = () => {
   const [image, setImage] = useState(null);
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
-<<<<<<< HEAD
+  const fileInputRef2 = useRef(null);
   const audioInputRef = useRef(null);
 
-  const [showWebcam, setShowWebcam] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [audio, setAudio] = useState(null);
-
-=======
-  const fileInputRef2 = useRef(null);
   const [showWebcam, setShowWebcam] = useState(false);
   const [loading, setLoading] = useState(false);
   const [scannedText, setScannedText] = useState("");
@@ -29,7 +23,8 @@ const UploadInfo = () => {
       sendEmail();
     }
   }, [scannedText]);
->>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
+  const [audio, setAudio] = useState(null);
+
 
   const handleScan = async (imageUrl) => {
     setLoading(true);
@@ -45,7 +40,7 @@ const UploadInfo = () => {
 
       const data = await res.json();
       console.log("Detected text:", data.text);
-<<<<<<< HEAD
+      setScannedText(data.text);
 
       // POST TO DATABASE
       // client as placeholder for now
@@ -78,9 +73,6 @@ const UploadInfo = () => {
       const newData2 = await newRes2.json();
       console.log('all clients:', newData2);
       
-=======
-      setScannedText(data.text);
->>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
     } catch (err) {
       console.error("Scan failed:", err);
     }
@@ -272,18 +264,6 @@ const UploadInfo = () => {
         style={{ display: "none" }}
         capture="environment"
       />
-<<<<<<< HEAD
-=======
-
-      <input
-        ref={fileInputRef2}
-        type="file"
-        accept="audio/*"
-        style={{ display: "none" }}
-        capture="environment"
-      />
-
->>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
       {image && (
         <div className="mt-4 flex flex-col items-center justify-center">
           <img src={image} alt="Uploaded" className="w-[300px] mx-auto" />
@@ -296,7 +276,6 @@ const UploadInfo = () => {
         </div>
       )}
 
-<<<<<<< HEAD
       
     <input
         ref={audioInputRef}
@@ -313,19 +292,6 @@ const UploadInfo = () => {
           style={{ display: "block", marginTop: "10px" }}
         />
       )}
-=======
-      <div className="text-center">
-        <h2 className="text-3xl font-semibold mb-8 mt-20">Upload Audio</h2>
-      </div>
-      <div className="flex justify-evenly gap-6 mt-8">
-        <button
-          onClick={triggerFileInput}
-          className="w-40 h-17 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 hover:from-emerald-600 hover:via-lime-600 hover:to-green-600 text-white px-6 py-2.5 rounded-md transition-all duration-300 text-lg"
-        >
-          Select Audio
-        </button>
-      </div>
->>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
     </div>
   );
 };
