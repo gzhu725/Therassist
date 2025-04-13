@@ -81,15 +81,17 @@ const TherapistDashboardPage = () => {
     try {
       // Fetch user data from the backend
       const response = await fetch(
-        `http://localhost:5000/clients/getAllData/${clientItem}`,
+        `http://localhost:5000/clients/get/${clientItem}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         }
       );
-
+      console.log("aaa");
       if (response.ok) {
         const theclient = await response.json();
+        console.log("bbb");
+
         console.log(theclient);
 
         setSessionsList(theclient.sessions);
@@ -108,7 +110,7 @@ const TherapistDashboardPage = () => {
     // );
     // setSessionsList(["4/1/2025", "4/3/2025"]);
     // setClientFilesList(["Journal Entry - 3/29", "Audio Entry - 3/30"]);
-    console.log(clientItem);
+    console.log("client ", clientItem);
   }
 
   return (

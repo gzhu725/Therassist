@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const ClientDashboardPage = () => {
   const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today?");
-  const [client, setClient] = useState("Select a Client:");
+  const [client, setClient] = useState("Jojo Siwa");
   const [summary, setSummary] = useState("No Client Selected");
   const [clientsList, setClientsList] = useState(["Bonnie Green"]);
   const [sessionsList, setSessionsList] = useState(["4/1/2025", "4/3/2025"]);
@@ -20,8 +20,8 @@ const ClientDashboardPage = () => {
   ]);
   const [chatQuestion, setChatQuestion] = useState("");
 
-  const [username, setUsername] = useState("candacesun");
-  const [therapist, setTherapist] = useState("Joe Smith");
+  const [username, setUsername] = useState("jojo");
+  const [therapist, setTherapist] = useState("Gloria Zhu");
   const router = useRouter(); // Create the router instance to use for navigation
 
   useEffect(() => {
@@ -48,13 +48,60 @@ const ClientDashboardPage = () => {
     setChatAnswer(response.text);
   }
 
-  function updateClient(clientItem) {
+
+  async function updateClient(clientItem) {
     setClient(clientItem);
-    setSummary(
-      "Bonnie has made significant progress in therapy, demonstrating increased self-awareness and improved coping strategies for managing anxiety and stress. She has shown a strong commitment to personal growth, actively engaging in sessions and applying therapeutic tools to her daily life. Currently, Bonnie is working on setting healthy boundaries in her relationships and building self-confidence through assertiveness training. Additionally, she continues to explore underlying patterns from past experiences that contribute to her emotional responses. "
-    );
-    console.log(clientItem);
+
+    try {
+      // Fetch user data from the backend
+      const response = await fetch(
+        `http://localhost:5000/clients/getAllData/${clientItem}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log("aaa");
+      if (response.ok) {
+        const theclient = await response.json();
+        console.log("bbb");
+
+        console.log(theclient);
+
+        setSessionsList(theclient.sessions);
+        setClientFilesList(theclient.journals);
+        setSummary(theclient.summary);
+      } else {
+        console.log("client not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setClient(clientItem);
+    // setSummary(
+    //   "Bonnie has made significant progress in therapy, demonstrating increased self-awareness and improved coping strategies for managing anxiety and stress. She has shown a strong commitment to personal growth, actively engaging in sessions and applying therapeutic tools to her daily life. Currently, Bonnie is working on setting healthy boundaries in her relationships and building self-confidence through assertiveness training. Additionally, she continues to explore underlying patterns from past experiences that contribute to her emotional responses. "
+    // );
+    // setSessionsList(["4/1/2025", "4/3/2025"]);
+    // setClientFilesList(["Journal Entry - 3/29", "Audio Entry - 3/30"]);
+    console.log("client ", clientItem);
   }
+
+  // function updateClient(clientItem) {
+  //   setSummary(
+  //     "Bonnie has made significant progress in therapy, demonstrating increased self-awareness and improved coping strategies for managing anxiety and stress. She has shown a strong commitment to personal growth, actively engaging in sessions and applying therapeutic tools to her daily life. Currently, Bonnie is working on setting healthy boundaries in her relationships and building self-confidence through assertiveness training. Additionally, she continues to explore underlying patterns from past experiences that contribute to her emotional responses. "
+  //   );
+  //   console.log(clientItem);
+  // }
+  useEffect(() => {
+    updateClient(client);
+    console.log("client ", client);
+  }, []); 
+
+  // const fetchData = async () => {
+  //   const res = await fetch("http://localhost:5001/clients/getSummary/Gloria");
+  //   const summary = await res.text();
+  //   console.log("Summary:", summary);
 
   return (
     <div>

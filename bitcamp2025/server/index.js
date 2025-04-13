@@ -87,6 +87,7 @@ app.get("/clients/getAllData/:clientName", async (req, res) => {
   //
   try {
     const client = await ClientModel.findOne({ name: client_name });
+    console.log("clienttt ", client_name);
     if (!client) {
       return res
         .status(404)
@@ -222,16 +223,16 @@ app.put("/clients/updateSummary", async (req, res) => {
   }
 });
 
-app.post("/postUser", async (req, res) => {
-  try {
-    const newUser = new UserModel({ name: req.body });
-    await newUser.save();
+// app.post("/postUser", async (req, res) => {
+//   try {
+//     const newUser = new UserModel({ name: req.body });
+//     await newUser.save();
 
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// //     res.status(201).json(newUser);
+// //   } catch (err) {
+// //     res.status(400).json({ error: err.message });
+// //   }
+// // });
 
 // Start server
 app.listen(PORT, () => {
