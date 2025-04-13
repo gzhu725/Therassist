@@ -2,9 +2,13 @@
 
 # dependencies
 /node_modules
+<<<<<<< Updated upstream
 
 node_modules
 
+=======
+node_modules
+>>>>>>> Stashed changes
 /.pnp
 .pnp.*
 .yarn/*
@@ -22,6 +26,7 @@ node_modules
 
 # production
 /build
+
 
 # misc
 .DS_Store
@@ -45,10 +50,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# ./lib/vision-key.json
-# ./keys.js
+./lib/vision-key.json
+./keys.js
 
-# ./lib/vision-key.json
-# ./keys.js
 
-src/keys.js
+./server/node_modules
+./src/keys.js

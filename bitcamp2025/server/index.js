@@ -25,7 +25,9 @@ const clientSchema = mongoose.Schema({
     username: String,
     password: String,
     email: String,
-    therapist_id: String,
+    therapist_name: String,
+    summary: String,
+    journals: [String],
     sessions: [String]
 })
 const therapistSchema = mongoose.Schema({
@@ -45,24 +47,89 @@ app.get("/clients/", async (req, res) => {
     res.json({success: true, data: data })
 });
 app.get("/therapists/", async (req, res) => {
-    const data = await TherapistModel.find({}) // all clients
+    const data = await TherapistModel.find({}) // all therapists
     res.json({success: true, data: data })
 });
 
 // get all clients for a therapist
-app.get("/getClients/:therapistId", async (req, res) => {
-    const therapistId = req.params.therapistId;
-    console.log(therapistId);
+app.get("/getClients/:therapistName", async (req, res) => {
+    const therapistName = req.params.therapistName;
+    // console.log(therapistName);
     try{
-        const clients = await ClientModel.find({ therapist_id: therapistId })
+        const clients = await ClientModel.find({ therapist_name: therapistName })
         res.json({success: true, data: clients })
-        console.log(clients);
-        console.log("clients");
+        // console.log(clients);
+        // console.log("clients");
     } catch (err) {
-        console.error("Error fetching clients by therapist ID:", err);
+        console.error("Error fetching clients by therapist name:", err);
         res.status(500).json({ success: false, error: err.message });
   }
 });
+
+// get data for specific client and therapist
+// sessions
+app.get("/clients/getData/:clientName", async (req, res) => {
+    const client_name = req.params.clientName;
+    // console.log(therapistName);
+    // 
+    try{
+        const client = await ClientModel.findOne({ name: client_name }).select("sessions");
+        if (!client) {
+            return res.status(404).json({ success: false, message: "Client not found" });
+        }
+        res.json({success: true, data: clients })
+        console.log("client sessions");
+        console.log(client);
+        // console.log(clients);
+        // console.log("clients");
+    } catch (err) {
+        console.error("Error fetching data for client:", err);
+        res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// get summary for client 
+app.get("/clients/getSummary/:clientName", async (req, res) => {
+    const client_name = req.params.clientName;
+    try{
+        const client_summary = await ClientModel.findOne({ name: client_name }).select("summary -_id");
+        if (!client_summary) {
+            return res.status(404).json({ success: false, message: "Client summary not found" });
+        }
+        const summaryvalue = client_summary.summary;
+        res.send(summaryvalue);
+        // console.log("client");
+        // console.log(summaryvalue);
+
+    } catch (err) {
+        console.error("Error fetching summary for client:", err);
+        res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
+// get journals
+app.get("/clients/getJournals/:clientName", async (req, res) => {
+    const client_name = req.params.clientName;
+    // 
+    try{
+        const client = await ClientModel.findOne({ name: client_name }).select("journals");
+        if (!client) {
+            return res.status(404).json({ success: false, message: "Client not found" });
+        }
+        const journals = client.journals;
+        res.json(journals);
+        console.log("client sessions");
+        console.log(journals);
+        // console.log(clients);
+        // console.log("clients");
+    } catch (err) {
+        console.error("Error fetching data for client:", err);
+        res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
 
 
 // add data 
@@ -97,6 +164,45 @@ app.put("/clients/update", async (req, res) => {
         console.error("PUT /update error:", err);
         res.status(500).json({ success: false, error: err.message });
     }
+});
+// PUT data to client 
+app.put("/clients/updateJournals", async (req, res) => {
+    try {
+        // body includes name and journal entry
+        const name = req.body.name;
+        const newData = req.body.journal_entry;
+        // console.log(req.body)
+        
+        await ClientModel.findOneAndUpdate({
+            name: name,
+        }, {
+            $addToSet: {journals: newData}
+        })
+        res.send({success: true, message: "data updated"})
+    } catch  (err) {
+        console.error("PUT update journals error:", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// PUT summary to client
+app.put("/clients/updateSummary", async (req, res) => {
+    try {
+        // body includes client name and new summary
+        const name = req.body.name;
+        const newData = req.body.summary;
+        console.log(req.body)
+        
+        await ClientModel.findOneAndUpdate({
+            name: name,
+        }, {
+            $set: {"summary": newData}
+        })
+        res.send({success: true, message: "summary updated"})
+    } catch  (err) {
+        console.error("put summary error:", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
 
 });
 
@@ -110,6 +216,7 @@ app.post('/postUser', async (req, res) => {
       res.status(400).json({ error: err.message });
     }
   });
+
   
 
 

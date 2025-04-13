@@ -67,21 +67,35 @@ const UploadInfo = () => {
 
       const newData = await newRes.json();
       console.log('Updated client:', newData);
-      // print("new new")
-      // console.log(newData.clientInfo.img_data);
-      // test 
-      const therapist_id = "67fb2dafd94617a5c6072202";
-      const newRes2 = await fetch('http://localhost:5000/getClients/67fb2dafd94617a5c6072202', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-   
-      });
 
-      const newData2 = await newRes2.json();
-      console.log('all clients:', newData2);
+      // // test summary
+      // const newRes2 = await fetch('http://localhost:5000/clients/updateJournals', {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     name: client_name, // this is the client name
+      //     journal_entry: "this is a new journal entry", // this is the new image data
+      //   }),
+      // });
+      // const newData2 = await newRes2.json();
+      // console.log('testing:', newData2);
       
+
+      // print("new new")
+      // // console.log(newData.clientInfo.img_data);
+      // // test 
+      // const therapist_id = "67fb2dafd94617a5c6072202";
+      // const newRes2 = await fetch('http://localhost:5000/getClients/67fb2dafd94617a5c6072202', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+   
+      // });
+
+     
     } catch (err) {
       console.error("Scan failed:", err);
     }
