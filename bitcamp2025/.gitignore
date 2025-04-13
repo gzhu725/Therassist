@@ -42,4 +42,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# ./lib/vision-key.json
+# ./keys.js
+
+# ./lib/vision-key.json
+# ./keys.js
+
 src/keys.js
