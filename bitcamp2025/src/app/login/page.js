@@ -15,21 +15,21 @@ const LoginPage = () => {
     const username = formData.get("username");
     const password = formData.get("password");
 
-
-
     const myContainer = document.getElementById("err");
 
     try {
       // Fetch user data from the backend
-      const response = await fetch(`http://localhost:5001/getUsers/${username}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
+      const response = await fetch(
+        `http://localhost:5001/getUsers/${username}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.ok) {
         const user = await response.json();
-        console.log(user)
+        console.log(user);
 
         // Check if the password matches
         if (user && user.password === password) {

@@ -5,6 +5,8 @@ import NavBar from "../components/NavBar";
 import { GoogleGenAI } from "@google/genai";
 import { GEMINI_KEY } from "@/keys";
 
+import { initFlowbite } from "flowbite";
+
 const UploadInfo = () => {
   const [image, setImage] = useState(null);
   const webcamRef = useRef(null);
@@ -15,6 +17,13 @@ const UploadInfo = () => {
   const [scannedText, setScannedText] = useState("");
 
   const [geminiText, setGeminiText] = useState("");
+
+  const [username, setUsername] = useState("candacesun");
+  useEffect(() => {
+    setTimeout(() => {
+      initFlowbite();
+    });
+  }, []);
 
   useEffect(() => {
     if (scannedText) {
@@ -153,7 +162,7 @@ const UploadInfo = () => {
 
   return (
     <div>
-      <NavBar />
+      <NavBar username={username} />
       <div className="text-center">
         <h2 className="text-3xl font-semibold mb-8 mt-20">
           Upload or Take a Photo
