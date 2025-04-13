@@ -20,7 +20,7 @@ const LoginPage = () => {
     try {
       // Fetch user data from the backend
       const response = await fetch(
-        `http://localhost:5001/getUsers/${username}`,
+        `http://localhost:5000/getUsers/${username}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

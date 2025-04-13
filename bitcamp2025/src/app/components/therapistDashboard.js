@@ -12,12 +12,14 @@ const TherapistDashboardPage = () => {
   const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today?");
   const [client, setClient] = useState("Select a Client:");
   const [summary, setSummary] = useState("No Client Selected");
-  const [clientsList, setClientsList] = useState(["Bonnie Green"]);
-  const [sessionsList, setSessionsList] = useState(["No Client Selected"]);
-  const [clientFilesList, setClientFilesList] = useState([
-    "No Client Selected",
-  ]);
+  const [clientsList, setClientsList] = useState([]);
+  const [sessionsList, setSessionsList] = useState([]);
+  const [clientFilesList, setClientFilesList] = useState([]);
   const [chatQuestion, setChatQuestion] = useState("");
+  const [currentFileData, setCurrentFileData] = useState(
+    "Your files will open here!"
+  );
+  const [currentFileName, setCurrentFileName] = useState("");
 
   const [username, setUsername] = useState("candacesun");
   const router = useRouter(); // Create the router instance to use for navigation
@@ -25,8 +27,37 @@ const TherapistDashboardPage = () => {
   useEffect(() => {
     setTimeout(() => {
       initFlowbite();
+      getClients();
     });
   }, []);
+
+  async function getClients() {
+    var name = "Dr.Therapist";
+    try {
+      // Fetch user data from the backend
+      const response = await fetch(`http://localhost:5000/getClients/${name}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        var clientsUpdated = [];
+        const theclients = await response.json();
+        console.log(theclients);
+
+        for (var person of theclients) {
+          console.log(person.name);
+          clientsUpdated.push(person.name);
+        }
+
+        setClientsList(clientsUpdated);
+      } else {
+        console.log("clients not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function getResponse() {
     setChatAnswer("Loading...");
@@ -46,13 +77,37 @@ const TherapistDashboardPage = () => {
     setChatAnswer(response.text);
   }
 
-  function updateClient(clientItem) {
+  async function updateClient(clientItem) {
+    try {
+      // Fetch user data from the backend
+      const response = await fetch(
+        `http://localhost:5000/clients/getAllData/${clientItem}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.ok) {
+        const theclient = await response.json();
+        console.log(theclient);
+
+        setSessionsList(theclient.sessions);
+        setClientFilesList(theclient.journals);
+        setSummary(theclient.summary);
+      } else {
+        console.log("client not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     setClient(clientItem);
-    setSummary(
-      "Bonnie has made significant progress in therapy, demonstrating increased self-awareness and improved coping strategies for managing anxiety and stress. She has shown a strong commitment to personal growth, actively engaging in sessions and applying therapeutic tools to her daily life. Currently, Bonnie is working on setting healthy boundaries in her relationships and building self-confidence through assertiveness training. Additionally, she continues to explore underlying patterns from past experiences that contribute to her emotional responses. "
-    );
-    setSessionsList(["4/1/2025", "4/3/2025"]);
-    setClientFilesList(["Journal Entry - 3/29", "Audio Entry - 3/30"]);
+    // setSummary(
+    //   "Bonnie has made significant progress in therapy, demonstrating increased self-awareness and improved coping strategies for managing anxiety and stress. She has shown a strong commitment to personal growth, actively engaging in sessions and applying therapeutic tools to her daily life. Currently, Bonnie is working on setting healthy boundaries in her relationships and building self-confidence through assertiveness training. Additionally, she continues to explore underlying patterns from past experiences that contribute to her emotional responses. "
+    // );
+    // setSessionsList(["4/1/2025", "4/3/2025"]);
+    // setClientFilesList(["Journal Entry - 3/29", "Audio Entry - 3/30"]);
     console.log(clientItem);
   }
 
@@ -263,15 +318,18 @@ const TherapistDashboardPage = () => {
                 </svg>
               </button>
               <ul id="dropdown-example" className="hidden py-2 space-y-2">
-                {sessionsList.map((sessionItem) => {
+                {sessionsList.map((sessionItem, i) => {
                   return (
                     <li key={sessionItem}>
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => {
+                          setCurrentFileData(sessionItem);
+                          setCurrentFileName("Session " + (i + 1).toString());
+                        }}
                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
-                        {sessionItem}
-                      </a>
+                        Session {i + 1}
+                      </button>
                     </li>
                   );
                 })}
@@ -318,15 +376,20 @@ const TherapistDashboardPage = () => {
                 </svg>
               </button>
               <ul id="dropdown-example2" className="hidden py-2 space-y-2">
-                {clientFilesList.map((fileItem) => {
+                {clientFilesList.map((fileItem, i) => {
                   return (
                     <li key={fileItem}>
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => {
+                          setCurrentFileData(fileItem);
+                          setCurrentFileName(
+                            "Journal File " + (i + 1).toString()
+                          );
+                        }}
                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
-                        {fileItem}
-                      </a>
+                        Journal File {i + 1}
+                      </button>
                     </li>
                   );
                 })}
@@ -384,8 +447,11 @@ const TherapistDashboardPage = () => {
                   role="tabpanel"
                   aria-labelledby="profile-tab"
                 >
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Your files will open here!
+                  <b className="text-sm text-gray-700 dark:text-gray-400">
+                    {currentFileName}
+                  </b>
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
+                    {currentFileData}
                   </p>
                 </div>
                 <div
