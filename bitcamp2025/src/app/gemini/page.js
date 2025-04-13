@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import { GoogleGenAI } from "@google/genai";
 import { GEMINI_KEY } from "@/keys";
