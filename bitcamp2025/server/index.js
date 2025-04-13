@@ -54,34 +54,28 @@ app.get("/therapists/", async (req, res) => {
 // get all clients for a therapist
 app.get("/getClients/:therapistName", async (req, res) => {
     const therapistName = req.params.therapistName;
-    // console.log(therapistName);
     try{
         const clients = await ClientModel.find({ therapist_name: therapistName })
-        res.json({success: true, data: clients })
-        // console.log(clients);
-        // console.log("clients");
+        res.send(clients);
+
     } catch (err) {
         console.error("Error fetching clients by therapist name:", err);
         res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// get data for specific client and therapist
+// get data for specific client 
 // sessions
 app.get("/clients/getData/:clientName", async (req, res) => {
     const client_name = req.params.clientName;
-    // console.log(therapistName);
     // 
     try{
         const client = await ClientModel.findOne({ name: client_name }).select("sessions");
         if (!client) {
             return res.status(404).json({ success: false, message: "Client not found" });
         }
-        res.json({success: true, data: clients })
-        console.log("client sessions");
-        console.log(client);
-        // console.log(clients);
-        // console.log("clients");
+        res.send( client.sessions );
+
     } catch (err) {
         console.error("Error fetching data for client:", err);
         res.status(500).json({ success: false, error: err.message });
@@ -98,8 +92,6 @@ app.get("/clients/getSummary/:clientName", async (req, res) => {
         }
         const summaryvalue = client_summary.summary;
         res.send(summaryvalue);
-        // console.log("client");
-        // console.log(summaryvalue);
 
     } catch (err) {
         console.error("Error fetching summary for client:", err);
@@ -119,10 +111,6 @@ app.get("/clients/getJournals/:clientName", async (req, res) => {
         }
         const journals = client.journals;
         res.json(journals);
-        console.log("client sessions");
-        console.log(journals);
-        // console.log(clients);
-        // console.log("clients");
     } catch (err) {
         console.error("Error fetching data for client:", err);
         res.status(500).json({ success: false, error: err.message });
