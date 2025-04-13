@@ -5,7 +5,7 @@ require('dotenv').config();
 
 // the thing that connects to the mongodb database
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -15,11 +15,7 @@ app.use(express.json());
 
 // MongoDB connection
 mongoose
-.connect(process.env.MONGO_URI, 
-    {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-    })
+.connect(process.env.MONGO_URI)
 .then(() => console.log('✅ Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 
@@ -104,24 +100,18 @@ app.put("/clients/update", async (req, res) => {
 
 });
 
-// add clients to therapist's client list
-app.put("/therapists/update", async (req, res) => {
-    try{
-        const name = req.body.name;
-        const newClient = req.body.newClient;;
-        console.log(req.body)
-        
-        await TherapistModel.findOneAndUpdate({
-            name: name,
-        }, {
-            $addToSet: {client_list: newClient}
-        })
-        res.send({success: true, message: "data updated"})
-    } catch  (err) {
-        console.error("PUT /update error:", err);
-        res.status(500).json({ success: false, error: err.message });
+app.post('/postUser', async (req, res) => {
+    try {
+      const newUser = new UserModel({ name: req.body });
+      await newUser.save();
+
+      res.status(201).json(newUser);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
-});
+  });
+  
+
 
 
 

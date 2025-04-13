@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 vision-key.json
+src/keys.js
 
 # debug
 npm-debug.log*
@@ -43,3 +44,8 @@ next-env.d.ts
 
 # ./lib/vision-key.json
 # ./keys.js
+
+# ./lib/vision-key.json
+# ./keys.js
+
+src/keys.js

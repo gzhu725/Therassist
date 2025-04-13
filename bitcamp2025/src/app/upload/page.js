@@ -1,33 +1,51 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Webcam from "react-webcam";
 import NavBar from "../components/NavBar";
+import { GoogleGenAI } from "@google/genai";
+import { GEMINI_KEY } from "@/keys";
 
 const UploadInfo = () => {
   const [image, setImage] = useState(null);
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
+<<<<<<< HEAD
   const audioInputRef = useRef(null);
 
   const [showWebcam, setShowWebcam] = useState(false);
   const [loading, setLoading] = useState(false);
   const [audio, setAudio] = useState(null);
 
+=======
+  const fileInputRef2 = useRef(null);
+  const [showWebcam, setShowWebcam] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [scannedText, setScannedText] = useState("");
+
+  const [geminiText, setGeminiText] = useState("");
+
+  useEffect(() => {
+    if (scannedText) {
+      sendEmail();
+    }
+  }, [scannedText]);
+>>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
 
   const handleScan = async (imageUrl) => {
     setLoading(true);
     try {
       const blob = await fetch(imageUrl).then((res) => res.blob());
-      const base64 = await blobToBase64(blob);  //valid base 64 coding
+      const base64 = await blobToBase64(blob); //valid base 64 coding
 
       const res = await fetch("/api/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 })
+        body: JSON.stringify({ image: base64 }),
       });
 
       const data = await res.json();
       console.log("Detected text:", data.text);
+<<<<<<< HEAD
 
       // POST TO DATABASE
       // client as placeholder for now
@@ -60,11 +78,78 @@ const UploadInfo = () => {
       const newData2 = await newRes2.json();
       console.log('all clients:', newData2);
       
+=======
+      setScannedText(data.text);
+>>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
     } catch (err) {
       console.error("Scan failed:", err);
     }
     setLoading(false);
   };
+
+  async function sendEmail() {
+    /*
+    email: string
+    take the scanned text
+    run thru gemini. what are the plan of action/suggested things for the client to do?
+    send that suggestion to the client
+    */
+
+    const geminiInput =
+      "Please write an email (no subject) to the following client about the tasks they should complete before our next session based on the following notes:" +
+      scannedText;
+    console.log(geminiInput);
+
+    const ai = new GoogleGenAI({
+      apiKey: GEMINI_KEY,
+    });
+
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: geminiInput,
+      });
+
+      const suggestion = await response.response.text();
+      console.log("Generated suggestion:", suggestion);
+
+      setGeminiText(suggestion);
+
+      if (suggestion.trim() !== "") {
+        await fetch("/api/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: suggestion }),
+        });
+      } else {
+        console.warn("Gemini returned an empty suggestion, not sending email.");
+      }
+    } catch (err) {
+      console.error("Error generating Gemini content or sending email:", err);
+    }
+  }
+
+  async function sendEmail() {
+    const geminiInput =
+      "Please write an email (no subject) to the following client about the tasks they should complete before our next session based on the following notes:" +
+      scannedText;
+    console.log(geminiInput);
+    const ai = new GoogleGenAI({
+      apiKey: GEMINI_KEY,
+    });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: geminiInput,
+    });
+    console.log(response.text);
+
+    //after getting the response, send an automatic ACTUAL email from allwoed domain to gloria's personal email for now
+    await fetch("/api/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: response.text }),
+    });
+  }
 
   const triggerPhoto = () => {
     setImage(null);
@@ -187,6 +272,18 @@ const UploadInfo = () => {
         style={{ display: "none" }}
         capture="environment"
       />
+<<<<<<< HEAD
+=======
+
+      <input
+        ref={fileInputRef2}
+        type="file"
+        accept="audio/*"
+        style={{ display: "none" }}
+        capture="environment"
+      />
+
+>>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
       {image && (
         <div className="mt-4 flex flex-col items-center justify-center">
           <img src={image} alt="Uploaded" className="w-[300px] mx-auto" />
@@ -199,6 +296,7 @@ const UploadInfo = () => {
         </div>
       )}
 
+<<<<<<< HEAD
       
     <input
         ref={audioInputRef}
@@ -215,6 +313,19 @@ const UploadInfo = () => {
           style={{ display: "block", marginTop: "10px" }}
         />
       )}
+=======
+      <div className="text-center">
+        <h2 className="text-3xl font-semibold mb-8 mt-20">Upload Audio</h2>
+      </div>
+      <div className="flex justify-evenly gap-6 mt-8">
+        <button
+          onClick={triggerFileInput}
+          className="w-40 h-17 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 hover:from-emerald-600 hover:via-lime-600 hover:to-green-600 text-white px-6 py-2.5 rounded-md transition-all duration-300 text-lg"
+        >
+          Select Audio
+        </button>
+      </div>
+>>>>>>> 17bb176bc321ce7447d019c2c6a25d9e5086e7dd
     </div>
   );
 };
