@@ -9,6 +9,7 @@ const UploadInfo = () => {
   const [image, setImage] = useState(null);
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
+  const fileInputRef2 = useRef(null);
   const [showWebcam, setShowWebcam] = useState(false);
   const [loading, setLoading] = useState(false);
   const [scannedText, setScannedText] = useState("");
@@ -43,34 +44,33 @@ const UploadInfo = () => {
   };
 
   async function sendEmail() {
-
-     /*
+    /*
     email: string
     take the scanned text
     run thru gemini. what are the plan of action/suggested things for the client to do?
     send that suggestion to the client
     */
-   
+
     const geminiInput =
       "Please write an email (no subject) to the following client about the tasks they should complete before our next session based on the following notes:" +
       scannedText;
     console.log(geminiInput);
-  
+
     const ai = new GoogleGenAI({
       apiKey: GEMINI_KEY,
     });
-  
+
     try {
       const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: geminiInput,
       });
-  
+
       const suggestion = await response.response.text();
       console.log("Generated suggestion:", suggestion);
-  
+
       setGeminiText(suggestion);
-  
+
       if (suggestion.trim() !== "") {
         await fetch("/api/send", {
           method: "POST",
@@ -86,7 +86,6 @@ const UploadInfo = () => {
   }
 
   async function sendEmail() {
-  
     const geminiInput =
       "Please write an email (no subject) to the following client about the tasks they should complete before our next session based on the following notes:" +
       scannedText;
@@ -104,10 +103,8 @@ const UploadInfo = () => {
     await fetch("/api/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: response.text })
+      body: JSON.stringify({ text: response.text }),
     });
-  
-  
   }
 
   const triggerPhoto = () => {
@@ -210,6 +207,14 @@ const UploadInfo = () => {
         capture="environment"
       />
 
+      <input
+        ref={fileInputRef2}
+        type="file"
+        accept="audio/*"
+        style={{ display: "none" }}
+        capture="environment"
+      />
+
       {image && (
         <div className="mt-4 flex flex-col items-center justify-center">
           <img src={image} alt="Uploaded" className="w-[300px] mx-auto" />
@@ -221,6 +226,18 @@ const UploadInfo = () => {
           </button>
         </div>
       )}
+
+      <div className="text-center">
+        <h2 className="text-3xl font-semibold mb-8 mt-20">Upload Audio</h2>
+      </div>
+      <div className="flex justify-evenly gap-6 mt-8">
+        <button
+          onClick={triggerFileInput}
+          className="w-40 h-17 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 hover:from-emerald-600 hover:via-lime-600 hover:to-green-600 text-white px-6 py-2.5 rounded-md transition-all duration-300 text-lg"
+        >
+          Select Audio
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheckIcon } from "@heroicons/react/24/solid";
+import { PuzzlePieceIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -38,10 +38,10 @@ export default function NavBar(props) {
             </button>
             <Link href="/" className="flex ms-2 md:me-24">
               <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 via-lime-500 to-green-500 rounded-full flex items-center justify-center mr-2">
-                <ShieldCheckIcon className="h-5 w-5 text-white" />
+                <PuzzlePieceIcon className="h-5 w-5 text-white" />
               </div>
               <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                Therassic Park
+                Therassist
               </span>
             </Link>
 
@@ -105,7 +105,7 @@ export default function NavBar(props) {
                   </div>
                   <ul className="py-1" role="none">
                     <li>
-                      <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                      <div className="block py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
                         <button
                           onClick={() => router.push("/login")}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
