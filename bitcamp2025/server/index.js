@@ -5,7 +5,7 @@ require('dotenv').config();
 
 // the thing that connects to the mongodb database
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -13,16 +13,13 @@ app.use(express.json());
 
 // MongoDB connection
 mongoose
-.connect(process.env.MONGO_URI, 
-    {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-    })
+.connect(process.env.MONGO_URI)
 .then(() => console.log('✅ Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 
 // create user schema
 const userSchema = new mongoose.Schema({
+  id: String,
   username: String,
   password: String,
   name: String,
@@ -56,15 +53,26 @@ app.get("/getUsers/:username", async(req,res) => {
 });
 
 app.post('/postUser', async (req, res) => {
-    try {
-      const newUser = new UserModel({ name: req.body });
-      await newUser.save();
+  try {
+    const { id, username, password, name, type, userInfo } = req.body;
 
-      res.status(201).json(newUser);
-    } catch (err) {
-      res.status(400).json({ error: err.message });
-    }
-  });
+    const newUser = new UserModel({
+      id,          // UUID from the request body
+      username,    // The username from the request body
+      password,    // The password from the request body
+      name,        // The name should be a string (like 'username' or another string)
+      type,        // Type (e.g., 'therapist' or 'client')
+      userInfo,    // User information object (e.g., email)
+    });
+
+    await newUser.save();
+
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
   
 
 

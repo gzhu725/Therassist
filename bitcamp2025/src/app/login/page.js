@@ -1,51 +1,56 @@
 "use client";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
-import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const LoginPage = () => {
   const router = useRouter();
-  async function handleSubmit(event) {
+  const [errMessage, setErrMessage] = useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
 
+
+
     const myContainer = document.getElementById("err");
 
     try {
-      const response = await fetch(`test/login`, {
-        method: "POST",
+      // Fetch user data from the backend
+      const response = await fetch(`http://localhost:5001/getUsers/${username}`, {
+        method: "GET",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
       });
 
+
       if (response.ok) {
-        const res = await response.text();
-        console.log("success!" + res);
-        if (res === "True") {
+        const user = await response.json();
+        console.log(user)
+
+        // Check if the password matches
+        if (user && user.password === password) {
           router.push("/gemini");
           if (username) {
             localStorage.setItem("username", username.toString());
           }
         } else {
-          myContainer.innerHTML = "Please try again";
+          setErrMessage("Incorrect username or password");
           myContainer.style.display = "block";
         }
       } else {
-        // Handle errors
-        myContainer.innerHTML = "Please try again";
+        setErrMessage("User not found");
         myContainer.style.display = "block";
       }
     } catch (error) {
-      myContainer.innerHTML = "Server error";
+      setErrMessage("Server error");
       console.log(error);
       myContainer.style.display = "block";
     }
-  }
+  };
 
   return (
     <>
@@ -91,7 +96,9 @@ const LoginPage = () => {
             </button>
             <Link href="/signup">Sign Up</Link>
           </div>
-          <p className="text-red-500 text-xs italic mt-4 hidden" id="err"></p>
+          <p className="text-red-500 text-xs italic mt-4 hidden" id="err">
+            {errMessage}
+          </p>
         </form>
       </div>
     </>
