@@ -54,7 +54,7 @@ const UploadInfo = () => {
       // POST TO DATABASE
       // client as placeholder for now
       const client_name = "ella";
-      const newRes = await fetch('http://localhost:5000/clients/update', {
+      const newRes = await fetch('http://localhost:5001/clients/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ export default function TherapistView() {
 
     useEffect(() => {
         // Fetch data from your backend
-        fetch(`http://localhost:5000/getUsers/${username}`)
+        fetch(`http://localhost:5001/getUsers/${username}`)
         .then((res) => {
             if (!res.ok) throw new Error("User not found");
             return res.json();
