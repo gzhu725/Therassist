@@ -1,11 +1,14 @@
 "use client";
 import React, { useState } from "react";
+
 import NavBar from "../components/NavBar";
 import { GoogleGenAI } from "@google/genai";
 import { GEMINI_KEY } from "@/keys";
 
+
 const GeminiPage = () => {
   const [text, setText] = useState("");
+
 
   async function getResponse() {
     var inputtext = document.getElementById("question-input").value;
@@ -25,6 +28,7 @@ const GeminiPage = () => {
   return (
     <div>
       <NavBar />
+      {/* {isLoggedIn && <h2>Welcome, `${username}!`</h2>} */}
       <div className="chat-container">
         <div className="chat-question-container">
           <p>What is your question?</p>
