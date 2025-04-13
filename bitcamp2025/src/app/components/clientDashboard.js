@@ -18,6 +18,11 @@ const ClientDashboardPage = () => {
     "Journal Entry - 3/29",
     "Audio Entry - 3/30",
   ]);
+  const [currentFileData, setCurrentFileData] = useState(
+      "Your files will open here!"
+    );
+  const [currentFileName, setCurrentFileName] = useState("");
+  
   const [chatQuestion, setChatQuestion] = useState("");
 
   const [username, setUsername] = useState("jojo");
@@ -158,15 +163,25 @@ const ClientDashboardPage = () => {
                 </svg>
               </button>
               <ul id="dropdown-example" className="hidden py-2 space-y-2">
-                {sessionsList.map((sessionItem) => {
+                {sessionsList.map((sessionItem, i) => {
                   return (
                     <li key={sessionItem}>
-                      <a
+                      <button
+                        onClick={() => {
+                          setCurrentFileData(sessionItem);
+                          setCurrentFileName("Session " + (i + 1).toString());
+                        }}
+                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        >
+                        Session {i + 1}
+                      </button>
+
+                      {/* <a
                         href="#"
                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
                         {sessionItem}
-                      </a>
+                      </a> */}
                     </li>
                   );
                 })}
@@ -213,15 +228,20 @@ const ClientDashboardPage = () => {
                 </svg>
               </button>
               <ul id="dropdown-example2" className="hidden py-2 space-y-2">
-                {clientFilesList.map((fileItem) => {
+              {clientFilesList.map((fileItem, i) => {
                   return (
                     <li key={fileItem}>
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => {
+                          setCurrentFileData(fileItem);
+                          setCurrentFileName(
+                            "Journal File " + (i + 1).toString()
+                          );
+                        }}
                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
-                        {fileItem}
-                      </a>
+                        Journal File {i + 1}
+                      </button>
                     </li>
                   );
                 })}
@@ -273,14 +293,17 @@ const ClientDashboardPage = () => {
                 </ul>
               </div>
               <div id="default-styled-tab-content">
-                <div
+              <div
                   className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
                   id="styled-profile"
                   role="tabpanel"
                   aria-labelledby="profile-tab"
                 >
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Your files will open here!
+                  <b className="text-sm text-gray-700 dark:text-gray-400">
+                    {currentFileName}
+                  </b>
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
+                    {currentFileData}
                   </p>
                 </div>
                 <div
