@@ -11,7 +11,7 @@ import TherapistDashboardPage from "../components/therapistDashboard";
 import ClientDashboardPage from "../components/clientDashboard";
 
 const DashboardPage = () => {
-  const [role, setRole] = useState("client");
+  const [role, setRole] = useState("therapist");
 
   return (
     <>

@@ -84,7 +84,7 @@ app.put("/clients/update", async (req, res) => {
     try {
         // body includes name and img_data
         const name = req.body.name;
-        const newData = req.body.img_data;;
+        const newData = req.body.img_data;
         console.log(req.body)
         
         await ClientModel.findOneAndUpdate({
