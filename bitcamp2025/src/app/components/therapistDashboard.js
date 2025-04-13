@@ -35,7 +35,7 @@ const TherapistDashboardPage = () => {
     var name = "Gloria Zhu";
     try {
       // Fetch user data from the backend
-      const response = await fetch(`http://localhost:5000/getClients/${name}`, {
+      const response = await fetch(`http://localhost:5001/getClients/${name}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -72,15 +72,34 @@ const TherapistDashboardPage = () => {
     var extraInput =
     `Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.Use the following client data to inform your response: ${clientContext}`;
 
-    const ai = new GoogleGenAI({
-      apiKey: GEMINI_KEY,
-    });
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: inputtext + extraInput,
-    });
-    console.log(response.text);
-    setChatAnswer(response.text);
+    // Check if the input contains the phrase "my patients" to summarize
+    if (
+      inputtext.toLowerCase().includes("my patients") ||
+      inputtext.toLowerCase().includes("my clients")
+    ) {
+      setChatAnswer(
+        "Your patients are: " +
+          clientsList +
+          ". Would you like me to summarize any of your clients?"
+      );
+    } else {
+      const clientContext = `
+    Client Summary: ${summary || "No summary available"}.
+    Recent Sessions: ${sessionsList.length > 0 ? sessionsList.join(", ") : "No sessions available"}.
+    Files: ${clientFilesList.length > 0 ? clientFilesList.join(", ") : "No files available"}.`;
+
+      var extraInput = `Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.Use the following client data to inform your response: ${clientContext}`;
+
+      const ai = new GoogleGenAI({
+        apiKey: GEMINI_KEY,
+      });
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: inputtext + extraInput,
+      });
+      console.log(response.text);
+      setChatAnswer(response.text);
+    }
   }
 
   async function updateClient(clientItem) {

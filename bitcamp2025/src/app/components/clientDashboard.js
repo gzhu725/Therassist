@@ -66,7 +66,7 @@ const ClientDashboardPage = () => {
     try {
       // Fetch user data from the backend
       const response = await fetch(
-        `http://localhost:5000/clients/getAllData/${clientItem}`,
+        `http://localhost:5001/clients/getAllData/${clientItem}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
