@@ -36,7 +36,7 @@ export default function SignupPage() {
       try {
         const userId = uuidv4(); // Generate the UUID for the user
 
-        const response = await fetch("http://localhost:5001/postUser", {
+        const response = await fetch("http://localhost:5000/postUser", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
