@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ClientDashboardPage = () => {
-  const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today?");
+  const [chatAnswer, setChatAnswer] = useState("Hi! How can I help you today? Ask me about your treatment plans, goals, and progress.");
   const [client, setClient] = useState("Jojo Siwa");
   const [summary, setSummary] = useState("No Client Selected");
   const [clientsList, setClientsList] = useState(["Bonnie Green"]);
@@ -18,6 +18,11 @@ const ClientDashboardPage = () => {
     "Journal Entry - 3/29",
     "Audio Entry - 3/30",
   ]);
+  const [currentFileData, setCurrentFileData] = useState(
+      "Your files will open here!"
+    );
+  const [currentFileName, setCurrentFileName] = useState("");
+  
   const [chatQuestion, setChatQuestion] = useState("");
 
   const [username, setUsername] = useState("jojo");
@@ -34,9 +39,15 @@ const ClientDashboardPage = () => {
     setChatAnswer("Loading...");
     var inputtext = document.getElementById("question-input").value;
     console.log(inputtext);
-    var extraInput =
-      "\n Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.";
 
+    const clientContext = `
+    Client Summary: ${summary || "No summary available"}.
+    Recent Sessions: ${sessionsList.length > 0 ? sessionsList.join(", ") : "No sessions available"}.
+    Files: ${clientFilesList.length > 0 ? clientFilesList.join(", ") : "No files available"}.`;
+    
+    var extraInput =
+      `Answer the user query above acting as an AI therapist for a client. Keep your answer unformatted and no more than a paragraph.Use the following client data to inform your response: ${clientContext}`;
+    
     const ai = new GoogleGenAI({
       apiKey: GEMINI_KEY,
     });
@@ -99,7 +110,7 @@ const ClientDashboardPage = () => {
   }, []); 
 
   // const fetchData = async () => {
-  //   const res = await fetch("http://localhost:5001/clients/getSummary/Gloria");
+  //   const res = await fetch("http://localhost:5000/clients/getSummary/Gloria");
   //   const summary = await res.text();
   //   console.log("Summary:", summary);
 
@@ -158,15 +169,25 @@ const ClientDashboardPage = () => {
                 </svg>
               </button>
               <ul id="dropdown-example" className="hidden py-2 space-y-2">
-                {sessionsList.map((sessionItem) => {
+                {sessionsList.map((sessionItem, i) => {
                   return (
                     <li key={sessionItem}>
-                      <a
+                      <button
+                        onClick={() => {
+                          setCurrentFileData(sessionItem);
+                          setCurrentFileName("Session " + (i + 1).toString());
+                        }}
+                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        >
+                        Session {i + 1}
+                      </button>
+
+                      {/* <a
                         href="#"
                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
                         {sessionItem}
-                      </a>
+                      </a> */}
                     </li>
                   );
                 })}
@@ -213,15 +234,20 @@ const ClientDashboardPage = () => {
                 </svg>
               </button>
               <ul id="dropdown-example2" className="hidden py-2 space-y-2">
-                {clientFilesList.map((fileItem) => {
+              {clientFilesList.map((fileItem, i) => {
                   return (
                     <li key={fileItem}>
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => {
+                          setCurrentFileData(fileItem);
+                          setCurrentFileName(
+                            "Journal File " + (i + 1).toString()
+                          );
+                        }}
                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
-                        {fileItem}
-                      </a>
+                        Journal File {i + 1}
+                      </button>
                     </li>
                   );
                 })}
@@ -273,14 +299,17 @@ const ClientDashboardPage = () => {
                 </ul>
               </div>
               <div id="default-styled-tab-content">
-                <div
+              <div
                   className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
                   id="styled-profile"
                   role="tabpanel"
                   aria-labelledby="profile-tab"
                 >
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Your files will open here!
+                  <b className="text-sm text-gray-700 dark:text-gray-400">
+                    {currentFileName}
+                  </b>
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
+                    {currentFileData}
                   </p>
                 </div>
                 <div
